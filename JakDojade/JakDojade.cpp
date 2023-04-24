@@ -1,16 +1,55 @@
 ﻿#include "ListaSasiedztwa.h"
+#include "Zarzadzanie.h"
+#include "Mapa.h"
 #include <iostream>
 #define MAXSIZE 3000
 
 using namespace std; 
-bool isLetter(char x) {
-    if (x <= 'Z' && x >= 'A')
-        return true;
-    else return false; 
+
+int iledrog(char** maps, int width, int height, int x, int y) {
+    int ret = 0;
+    if (x - 1 >= 0 && maps[x - 1][y] == '#')
+        ret++;
+    if (x + 1 <width && maps[x +1][y] == '#')
+        ret++;
+    if (y - 1 >= 0 && maps[x][y-1] == '#')
+        ret++;
+    if (y+1<height && maps[x][y+1] == '#')
+        ret++;
+    return ret;
+}
+
+
+
+void findRoad(Zarzadzanie* zarzadzanie, char** maps, int width, int height, int x, int y, int dlugoscdrogi) {
+
+    if (iledrog(maps, width, height, x, y) == 0) {
+        //spawdzanie czy w poblizu jesy "*"- miasto
+       
+
+    }
+    
 
 }
 
 void readRoads(Zarzadzanie* zarzadzanie, char ** maps, int width, int height) {
+    //szukanie pierwszego miasta 
+    int i, j;
+    for ( i = 0; i < height; i++) {
+        for (j= 0; j < width; j++) {
+            if (maps[i][j] == '*') {
+                break;
+            }
+        }
+        if (maps[i][j] == '*') {
+            break;
+        }
+    }
+    findRoad(zarzadzanie, maps, width, height, i, j, 0);
+    
+
+
+
     zarzadzanie->dodajSasiedztwo(8, 1, 0, 4, 2); //gda szcz +
     zarzadzanie->dodajSasiedztwo(8, 1, 13,8,4); //gda war +
 
@@ -28,111 +67,31 @@ void readRoads(Zarzadzanie* zarzadzanie, char ** maps, int width, int height) {
 
 int main()
 {
-    
-
+    Mapa* naszamapa=new Mapa();
     //wczyatnie wymiarow mapy 
     int width, height, k, questions;
-    cin >> width;
-    cin >> height;
-    //wczytanie mapy do tablicy 
-    //char maps[MAXSIZE][MAXSIZE]; 
-    char** maps = (char**)malloc(height * sizeof(char*));
-    for (int i = 0; i < width; i++) {
-        maps[i] = (char*)malloc(width * sizeof(char));
-    }
-
-
-    for (int i = 0; i < height; i++) {
-        //pomijanie entera
-        getchar();
-        for (int j = 0; j < width; j++) {
-            maps[i][j] = getchar();
-        }
-    }
-
+    cin >> naszamapa->width;
+    cin >> naszamapa->height;
     Zarzadzanie* mapa=new Zarzadzanie();
-    char* a;
-    a = (char*)malloc(3 * sizeof(char*));
-    a[0] = 'a';
-    a[1] = 'b';
-    a[2] = '\0';
-    char tab[100];
-    int sizeofname = 0;
-    bool isname = false;
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            if (isLetter(maps[i][j])&& !isname) {
-                isname = true;
-                tab[sizeofname] = maps[i][j];
-                sizeofname++;
-                //cityName(maps, width, height, i, j) != NULL;
-                
-                //mapa->dodajMiasto(a, i, j);
-            }else if (isLetter(maps[i][j]) && isname) {
-                tab[sizeofname] = maps[i][j];
-                sizeofname++;
-               
-            }else if  ((!isLetter(maps[i][j]) && isname) ||(j==width-1 && isname)){
-                isname = false;
-                //wczyatnie i zapisanie nazwy
-                a= (char*)malloc(sizeofname+1 * sizeof(char*));
-                for (int w = 0; w < sizeofname; w++) {
-                    a[w] = tab[w];
-                }
-                a[sizeofname] = '\0';
-               
-               // cout << a << endl;
-                //szukanie gwaizdkiw poblizu 
-                if (maps[i][j] == '*'){
-                    mapa->dodajMiasto(a, j, i);
-                    sizeofname = 0;
-                    continue;
-                }
-                if (j - sizeofname - 1 >= 0) {
-                    if (maps[i][j - sizeofname - 1] == '*') {
-                        mapa->dodajMiasto(a,  j- sizeofname - 1,i);
-                        sizeofname = 0;
-                        continue;
-                    }
-                    
-                }                
-                for (int w = 0; w < sizeofname+2; w++) {
-
-                    if (i - 1 >= 0) {
-                        if (maps[i - 1][j - w] == '*')  {
-                            mapa->dodajMiasto(a, j -w,  i - 1);
-                            sizeofname = 0;
-                            continue;
-                        }
-                    }
-
-                    if (i + 1 < height) {
-                        if (maps[i + 1][j - w] == '*') {
-                            mapa->dodajMiasto(a, j - w,  i + 1);
-                            sizeofname = 0;
-                            continue;
-                        }
-                    }
-                    
-                }
-                sizeofname = 0;
-               
-            }
-        }
-    }
-    readRoads(mapa, maps, width, height);
+    naszamapa->Wczytaj();
+    naszamapa->DodajMiasta(mapa);
+    naszamapa->SzukajDrog(mapa);
     mapa->wypisz();
 
 
+
     
 
 
-    // wyswietalnie mapy 
-    cout << "----------------------" << endl;
-    //for (int i = 0; i < height; i++) {
-      //  for (int j = 0; j < width; j++) {
-            //cout << maps[i][j];
-      //  }
-       // cout << endl;
-    //}
+    /*
+    char* miasto1, * miasto2;
+    miasto1 = (char*)malloc(sizeof(char) * 100);
+    miasto2 = (char*)malloc(sizeof(char) * 100);
+    while (true) {
+        cin >> miasto1 >> miasto2;
+        mapa->dijkstraInit(miasto1, miasto2, 0);
+    }
+    */
+    
+    
 }

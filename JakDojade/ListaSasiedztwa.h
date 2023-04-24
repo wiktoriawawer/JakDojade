@@ -1,4 +1,6 @@
 #pragma once
+class ListaMiast;
+
 class ListaSasiedztwa
 {
 public:
@@ -7,8 +9,9 @@ public:
 	int y;
 	int dlugoscDrogi;
 	ListaSasiedztwa* next;
+	ListaMiast* miasto;
 	//dodawnie pierwszego miasta
-	ListaSasiedztwa(char* nazwa, int x, int y);
+	ListaSasiedztwa(char* nazwa, int x, int y, ListaMiast* miasto);
 };
 
 class ListaMiast {
@@ -18,16 +21,3 @@ public:
 	//tworzenie nowego miasta
 	ListaMiast(char* nazwa, int x, int y);
 };
-
-class Zarzadzanie {
-public:
-	int iloscMiast;
-	ListaMiast* pierwszeMiasto;
-	//dodaj nowe miasto;
-	void dodajMiasto(char* nazwa,  int x, int y);
-	void usunMiasto();
-	void dodajSasiedztwo( int x1, int y1, int x2, int y2, int odleglosc);
-	void wypisz();
-	Zarzadzanie();
-};
-
