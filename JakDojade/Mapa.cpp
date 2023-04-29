@@ -12,13 +12,13 @@ bool isLetter(char x)
 void Mapa::Wczytaj() {
 	//alokacja pamieci 
 	tablicamapy = (char**)malloc(this->height * sizeof(char*));
-	for (int i = 0; i < this->width; i++) {
+	for (int i = 0; i < this->height; i++) {
 		tablicamapy[i] = (char*)malloc(width * sizeof(char));
 	}
 	//wczytanie mapy 
 	for (int i = 0; i < this->height; i++) {
 		//pomijanie entera
-		getchar();
+ 		getchar();
 		for (int j = 0; j < this->width; j++) {
 			tablicamapy[i][j] = getchar();
 		}
@@ -90,95 +90,157 @@ void Mapa::DodajMiasta(Zarzadzanie* zarzadzanie)
             }
         }
     }
-    //readRoads(mapa, maps, width, height);
-    zarzadzanie->wypisz();
 }
 
 void Mapa::SzukajDrog(Zarzadzanie* zarzadzanie)
 {
+ 
  
     //szukanie pierwszego miasta 
     int i, j;
     for (i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
             if (tablicamapy[i][j] == '*') {
-                break;
+                tablicamapy[i][j] = '.';
+                this->SzukajDrogi(zarzadzanie, j, i, j, i, 0);
+                this->Przywroc();
+
             }
         }
-        if (tablicamapy[i][j] == '*') {
-            break;
-        }
+        
     }
-    tablicamapy[i][j] = '.';
-    this->SzukajDrogi(zarzadzanie,i,j,i,j, 0);
+
    
 }
 
-void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int x, int y, int dlugosc)
+void Mapa::Przywroc() {
+    int i, j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            if (tablicamapy[i][j] == '&') {
+                tablicamapy[i][j] = '#';
+            }
+        }
+    }
+}
+
+void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int x, int y, int dlugosc, bool rozwidlenie)
 {
     int ileMiast = IleMiast(x, y);
     int ileDrog = IleDrog(x, y);
+
+    
     if (ileMiast == 0 && ileDrog == 1)
     {
-        int* tab = ZnajdzWspoldzedne(x, y, '#');
-        this->tablicamapy[x][y] = '.';
-        SzukajDrogi(zarzadznie, xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
+        int* tab;
+        
+        tab = ZnajdzWspoldzedne(x, y, '#');
+        if (rozwidlenie) {
+            tablicamapy[y][x] = '&';
+        }
+        else {
+            tablicamapy[y][x] = '.';
+        }
+        SzukajDrogi(zarzadznie, xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1, rozwidlenie);
         return;
+
+    }
+    else if (ileMiast == 0 && ileDrog >1)
+    {   
+        int* tab;
+        
+        for (int i = 0; i < ileDrog; i++) {
+            
+            tab = ZnajdzWspoldzedne(x, y, '#');    
+            if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
+                tablicamapy[y][x] = '&';
+            }
+            else {
+                tablicamapy[y][x] = '.';
+            }
+            SzukajDrogi(zarzadznie, xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1, true);
+        }
+        return;
+        
     }
     else if (ileMiast==1 && ileDrog==0) {
         int* tab = ZnajdzWspoldzedne(x, y, '*');
-        this->tablicamapy[x][y] = '.';
+
+        if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
+            tablicamapy[y][x] = rozwidlenie ? '&' : '.';
+        }
+        else {
+            tablicamapy[y][x] = '.';
+        }
         zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
         return;
     }
-    //sprawdzenie czy w poblizu jest gwiazdka 
-    if (x - 1 >= 0 && tablicamapy[x - 1][y] == '*') {
-        zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, x - 1, y, dlugosc + 1);
+    else if (ileMiast == 0 & ileDrog == 0) {
+        this->tablicamapy[y][x] = '.'; 
         return;
+    } 
+    else if (ileMiast >0   && ileDrog > 0) { 
+        rozwidlenie = ileDrog > 1 || rozwidlenie ? true : false;
+        int* tab = ZnajdzWspoldzedne(x, y, '*');
+        for (int i = 0; i < ileMiast; i++) {
+            tab = ZnajdzWspoldzedne(x, y, '*');
+            zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
+        }
+
+        this->tablicamapy[y][x] = '.';
+        zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
+        for (int i = 0; i < ileDrog; i++) {
+            tab = ZnajdzWspoldzedne(x, y, '#');
+            if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
+                tablicamapy[y][x] = rozwidlenie ? '&' : '.';
+            }
+            else {
+                tablicamapy[y][x] = '.';
+            }
+            SzukajDrogi(zarzadznie, xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1, rozwidlenie);
+        }
+
+
     }
-        
-    if (x + 1 < width && tablicamapy[x + 1][y] == '*') {
-        zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, x + 1, y, dlugosc + 1);
-        return;
+    else if (ileMiast >1 && ileDrog == 0) {
+        int* tab = ZnajdzWspoldzedne(x, y, '*');
+        for (int i = 0; i < ileMiast ; i++) {
+            tab = ZnajdzWspoldzedne(x, y, '*');
+            zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
+        }
     }
-        
-    if (y - 1 >= 0 && tablicamapy[x][y - 1] == '*') {
-        zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, x, y - 1, dlugosc + 1);
-        return;
-    }
-        
-    if (y + 1 < height && tablicamapy[x][y + 1] == '*') {
-        zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, x, y + 1, dlugosc + 1);
-        return;
-    }     
+ 
+
+    
 
     
 }
 int* Mapa::ZnajdzWspoldzedne(int x, int y,const char q) {
-    int tab[2];
-    if (x - 1 >= 0 && this->tablicamapy[x - 1][y] == q) {
+    int tab[2] = { -1,-1 };
+    if (x - 1 >= 0 && this->tablicamapy[y][x - 1] == q) {
         tab[0] = x - 1;
         tab[1] = y;
         return tab;
     }
-    if (x + 1 < height && tablicamapy[x + 1][y] == q) {
+    if (x + 1 < width && tablicamapy[y][x + 1] == q) {
         tab[0] = x + 1;
         tab[1] = y;
         return tab;
     }
 
-    if (y - 1 >= 0 && tablicamapy[x][y - 1] == q)
+    if (y - 1 >= 0 && tablicamapy[y-1][x] == q)
     {
         tab[0] = x ;
         tab[1] = y-1;
         return tab;
 
     }
-    if (y + 1 < width && tablicamapy[x][y + 1] == q) {
-        tab[0] = x ;
-        tab[1] = y+1;
+    if (y + 1 < height && tablicamapy[y + 1][x] == q) {
+        tab[0] = x;
+        tab[1] = y + 1;
         return tab;
     }
+    return tab;
 }
 
 int Mapa::IleDrog(int x, int y) {
@@ -190,15 +252,25 @@ int Mapa::IleMiast(int x, int y) {
 
 int Mapa::IleJest(int x, int y,const char q) {
     int ret = 0;
-    if (x - 1 >= 0 && tablicamapy[x - 1][y] == q)
+    if (x - 1 >= 0 && tablicamapy[y][x-1] == q)
         ret++;
-    if (x + 1 < height && tablicamapy[x + 1][y] == q)
+    if (x + 1 < width && tablicamapy[y][x+1] == q)
         ret++;
-    if (y - 1 >= 0 && tablicamapy[x][y - 1] == q)
+    if (y - 1 >= 0 && tablicamapy[y-1][x] == q)
         ret++;
-    if (y + 1 < width && tablicamapy[x][y + 1] == q)
+    if (y + 1 <height && tablicamapy[y+1][x] == q)
         ret++;
     return ret;
+}
+
+void Mapa::Wypisz()
+{
+    for (int i = 0; i < this->height; i++) {
+        for (int j = 0; j < this->width; j++) {
+            cout << tablicamapy[i][j];
+        }
+        cout << endl;
+    }
 }
 
 
