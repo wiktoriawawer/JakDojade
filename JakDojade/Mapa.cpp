@@ -94,15 +94,15 @@ void Mapa::DodajMiasta(Zarzadzanie* zarzadzanie)
 
 void Mapa::SzukajDrog(Zarzadzanie* zarzadzanie)
 {
- 
- 
     //szukanie pierwszego miasta 
     int i, j;
     for (i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
             if (tablicamapy[i][j] == '*') {
                 tablicamapy[i][j] = '.';
+                //cout << j << " " << i;
                 this->SzukajDrogi(zarzadzanie, j, i, j, i, 0);
+                //this->Wypisz();                
                 this->Przywroc();
 
             }
@@ -128,13 +128,14 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
 {
     int ileMiast = IleMiast(x, y);
     int ileDrog = IleDrog(x, y);
-
     
     if (ileMiast == 0 && ileDrog == 1)
     {
         int* tab;
         
         tab = ZnajdzWspoldzedne(x, y, '#');
+        if (tab[0] == -1 || tab[1] == -1)
+            return;
         if (rozwidlenie) {
             tablicamapy[y][x] = '&';
         }
@@ -151,7 +152,9 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
         
         for (int i = 0; i < ileDrog; i++) {
             
-            tab = ZnajdzWspoldzedne(x, y, '#');    
+            tab = ZnajdzWspoldzedne(x, y, '#');
+            if (tab[0] == -1 || tab[1] == -1)
+                return;
             if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
                 tablicamapy[y][x] = '&';
             }
@@ -165,6 +168,8 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
     }
     else if (ileMiast==1 && ileDrog==0) {
         int* tab = ZnajdzWspoldzedne(x, y, '*');
+        if (tab[0] == -1 || tab[1] == -1)
+            return;
 
         if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
             tablicamapy[y][x] = rozwidlenie ? '&' : '.';
@@ -182,8 +187,13 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
     else if (ileMiast >0   && ileDrog > 0) { 
         rozwidlenie = ileDrog > 1 || rozwidlenie ? true : false;
         int* tab = ZnajdzWspoldzedne(x, y, '*');
+        if (tab[0] == -1 || tab[1] == -1)
+            return;
+        
         for (int i = 0; i < ileMiast; i++) {
             tab = ZnajdzWspoldzedne(x, y, '*');
+            if (tab[0] == -1 || tab[1] == -1)
+                return;
             zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
         }
 
@@ -191,6 +201,8 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
         zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
         for (int i = 0; i < ileDrog; i++) {
             tab = ZnajdzWspoldzedne(x, y, '#');
+            if (tab[0] == -1 || tab[1] == -1)
+                return;
             if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
                 tablicamapy[y][x] = rozwidlenie ? '&' : '.';
             }
@@ -203,9 +215,11 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
 
     }
     else if (ileMiast >1 && ileDrog == 0) {
-        int* tab = ZnajdzWspoldzedne(x, y, '*');
+        int* tab;
         for (int i = 0; i < ileMiast ; i++) {
             tab = ZnajdzWspoldzedne(x, y, '*');
+            if (tab[0] == -1 || tab[1] == -1)
+                return;
             zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
         }
     }
@@ -251,6 +265,9 @@ int Mapa::IleMiast(int x, int y) {
 }
 
 int Mapa::IleJest(int x, int y,const char q) {
+    if (x < 0 || y < 0) {
+        return 0;
+    }
     int ret = 0;
     if (x - 1 >= 0 && tablicamapy[y][x-1] == q)
         ret++;

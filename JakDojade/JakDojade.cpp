@@ -30,9 +30,11 @@ int main()
     Zarzadzanie* mapa=new Zarzadzanie();
     naszamapa->Wczytaj();
     naszamapa->DodajMiasta(mapa);
+    //mapa->wypisz();
     naszamapa->SzukajDrog(mapa);
+    //mapa->wypisz();
     mapa->wcztajLoty();
-   // mapa->wypisz();
+    //mapa->wypisz();
     mapa->zapytania();
 
    

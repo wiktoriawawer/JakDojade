@@ -18,11 +18,13 @@ public:
 	void  usunSasiedztwo(ListaMiast* miasto1, ListaSasiedztwa* elementpoprzedni, ListaSasiedztwa* elementdousuniecia);
 
 	void dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc);
-	void dodajSasiedztwo(char* miasto1,char* miasto2 , int odleglosc);
+	void dodajSasiedztwoLot(char* miasto1, char* miasto2, int odleglosc);
+	//void dodajSasiedztwo(char* miasto1,char* miasto2 , int odleglosc);
 	void wypisz();
 	void dijkstraInit(char* miasto1, char* miasto2, bool posrednie);
 	void dijkstra(ListaMiast* obecneMiasto, OdleglosciMiasta* odleglosciMiasta, int aktualnaOdleglosc, UproszczonaListaMiast* aktualnaDroga);
 	Odleglosc* znajdzOdlegloscDoMiasta(ListaMiast* miasto, OdleglosciMiasta* odleglosciMiasta);
+	UproszczonaListaMiast* znajdzPosrednieMiasta(ListaMiast* miasto, OdleglosciMiasta* odleglosciMiasta);
 	OdleglosciMiasta* znajdzOdleglosciMiasta(ListaMiast* miasto);
 	void wcztajLoty();
 	void zapytania();

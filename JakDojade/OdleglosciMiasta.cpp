@@ -10,7 +10,7 @@ OdleglosciMiasta::OdleglosciMiasta(ListaMiast* miasto, ListaMiast* pierwszeMiast
 	odleglosci = (Odleglosc**)malloc(iloscMiast * sizeof(Odleglosc*));
 	ListaMiast* obecneMiasto = pierwszeMiasto;
 	for (int i = 0; i < iloscMiast; i++) {
-		odleglosci[i] = new Odleglosc(iloscMiast, obecneMiasto);
+		odleglosci[i] = new Odleglosc(iloscMiast, obecneMiasto, pierwszeMiasto);
 		obecneMiasto = obecneMiasto->next;
 	}
 }

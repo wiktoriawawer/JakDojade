@@ -47,11 +47,13 @@ void  Zarzadzanie::usunSasiedztwo(ListaMiast* miasto1, ListaSasiedztwa* elementp
 	//abc 
 	ListaSasiedztwa* sasiedztwo2 = elementdousuniecia->miasto->Sasiedztwo;
 	while (sasiedztwo2->next != NULL) {
-		if (sasiedztwo2->next->miasto = miasto1) {
+		if (sasiedztwo2->next->miasto == miasto1) {
 			sasiedztwo2->next = sasiedztwo2->next->next;
+			return;
 			///delele 
 			//usuniecye tego maista z pamieci ---------------------
 		}
+		sasiedztwo2 = sasiedztwo2->next;
 	}
 	
 }
@@ -67,6 +69,7 @@ void Zarzadzanie::dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc)
 
 	}
 	if (obecneMaisto1 == NULL) {
+		cout << x1 << "," << y1;
 		cout << "nie udalosie " << endl;
 		return;
 	}
@@ -101,6 +104,7 @@ void Zarzadzanie::dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc)
 		if (obecneMaisto2 == NULL) break;
 	}
 	if (obecneMaisto2 == NULL) {
+		cout << x2 << "," << y2;
 		cout << "nie udalosie " << endl;
 		return;
 	}
@@ -121,24 +125,24 @@ void Zarzadzanie::dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc)
 
 }
 
-void Zarzadzanie::dodajSasiedztwo(char* miasto1, char* miasto2, int odleglosc)
+void Zarzadzanie::dodajSasiedztwoLot(char* miasto1, char* miasto2, int odleglosc)
 {
 	//zakladam ze juz te miasta istanieja 
 	ListaMiast* obecneMaisto1 = findByName(miasto1);
 	
 	if (obecneMaisto1 == NULL) {
 		this->dodajMiasto(miasto1, -1, -1);
-		dodajSasiedztwo(miasto1, miasto2, odleglosc);
+		dodajSasiedztwoLot(miasto1, miasto2, odleglosc);
 		return;
 	}
 	ListaMiast* obecneMaisto2 = findByName(miasto2);
 	if (obecneMaisto2 == NULL) {
 		this->dodajMiasto(miasto2, -1, -1);
-		dodajSasiedztwo(miasto1, miasto2, odleglosc);
+		dodajSasiedztwoLot(miasto1, miasto2, odleglosc);
 		return;
 	}
 		
-	
+
 	ListaSasiedztwa* obecnesasiedztwo1 = obecneMaisto1->Sasiedztwo;
 	//sprawdzam czy istnieje juz takie sasiedztwo 
 	while (obecnesasiedztwo1->next != NULL) {
@@ -154,27 +158,18 @@ void Zarzadzanie::dodajSasiedztwo(char* miasto1, char* miasto2, int odleglosc)
 		}
 		obecnesasiedztwo1 = obecnesasiedztwo1->next;
 	}
-
+	//this->wypisz();
 	obecnesasiedztwo1 = obecneMaisto1->Sasiedztwo;
 	while (obecnesasiedztwo1->next != NULL) {
 		if (obecnesasiedztwo1->next->dlugoscDrogi > odleglosc) break;
 		obecnesasiedztwo1 = obecnesasiedztwo1->next;
 	}
 
-	ListaSasiedztwa* obecnesasiedztwo2 = obecneMaisto2->Sasiedztwo;
-	while (obecnesasiedztwo2->next != NULL) {
-		if (obecnesasiedztwo2->next->dlugoscDrogi > odleglosc) break;
-		obecnesasiedztwo2 = obecnesasiedztwo2->next;
-	}
-
 	ListaSasiedztwa* pomocnicza = obecnesasiedztwo1->next;
 	obecnesasiedztwo1->next = new ListaSasiedztwa(obecneMaisto2->Sasiedztwo->nazwa, obecneMaisto2->Sasiedztwo->x, obecneMaisto2->Sasiedztwo->y, obecneMaisto2);
 	obecnesasiedztwo1->next->dlugoscDrogi = odleglosc;
 	obecnesasiedztwo1->next->next = pomocnicza;
-	pomocnicza = obecnesasiedztwo2->next;
-	obecnesasiedztwo2->next = new ListaSasiedztwa(obecneMaisto1->Sasiedztwo->nazwa, obecneMaisto1->Sasiedztwo->x, obecneMaisto1->Sasiedztwo->y, obecneMaisto1);
-	obecnesasiedztwo2->next->dlugoscDrogi = odleglosc;
-	obecnesasiedztwo2->next->next = pomocnicza;
+	
 
 
 }
@@ -204,7 +199,7 @@ void Zarzadzanie::dijkstraInit(char* nazwa1, char* nazwa2, bool posrednie)
 		if (odleglosciMiasta == NULL) {
 			odleglosciMiasta = new OdleglosciMiasta(miasto1, pierwszeMiasto, iloscMiast);
 			this->odleglosciMiast[iloscPoliczonychMiast] = odleglosciMiasta;
-			this->dijkstra(miasto1, odleglosciMiast[iloscPoliczonychMiast], 0, new UproszczonaListaMiast(miasto1));
+			this->dijkstra(miasto1, odleglosciMiast[iloscPoliczonychMiast], 0, new UproszczonaListaMiast());
 		}
 		else {
 			ListaMiast* tmp = miasto1;
@@ -214,10 +209,23 @@ void Zarzadzanie::dijkstraInit(char* nazwa1, char* nazwa2, bool posrednie)
 	}
 	
 	Odleglosc* odleglosc = znajdzOdlegloscDoMiasta(miasto2, odleglosciMiasta);
+	UproszczonaListaMiast* miasta = znajdzPosrednieMiasta(miasto2, odleglosciMiasta);
 	if (odleglosc == nullptr)
 		return;
-	cout << odleglosc->odleglosc;
-	odleglosc->Wypisz();
+	cout << odleglosc->odleglosc << " ";
+
+	miasta = miasta->next;
+	if (posrednie) {
+		while (miasta != NULL) {
+				if (compare(miasta->miasto->Sasiedztwo->nazwa,nazwa2))
+					break;
+				cout << miasta->miasto->Sasiedztwo->nazwa << ' ';
+				miasta = miasta->next;
+		
+			}
+	}
+	
+	cout << endl;
 
 
 }
@@ -227,20 +235,27 @@ void Zarzadzanie::dijkstra(ListaMiast* obecneMiasto, OdleglosciMiasta* odleglosc
 	ListaSasiedztwa* sasiedztwo = obecneMiasto->Sasiedztwo;
 	Odleglosc* odleglosc = znajdzOdlegloscDoMiasta(sasiedztwo->miasto, odleglosciMiasta);
 	odleglosc->odwiedz();
+	//aktualnaDroga = odleglosc->aktualizujDroge(aktualnaOdleglosc, aktualnaDroga);
+	aktualnaDroga = odleglosc->aktualizujDroge(aktualnaOdleglosc, aktualnaDroga, obecneMiasto);
 	aktualnaOdleglosc = odleglosc->aktualizujOdleglosc(aktualnaOdleglosc,aktualnaDroga);
+	
+	Odleglosc* odleglosc2;
 	sasiedztwo = sasiedztwo->next;
 	while (sasiedztwo != NULL) {
-		odleglosc = znajdzOdlegloscDoMiasta(sasiedztwo->miasto, odleglosciMiasta);
+		odleglosc2 = znajdzOdlegloscDoMiasta(sasiedztwo->miasto, odleglosciMiasta);
 		int droga = aktualnaOdleglosc + sasiedztwo->dlugoscDrogi;
-		odleglosc->aktualizujOdleglosc(droga, aktualnaDroga);
+		
+		odleglosc2->aktualizujDroge(droga, aktualnaDroga);
+		odleglosc2->aktualizujOdleglosc(droga, aktualnaDroga);
+
 		sasiedztwo = sasiedztwo->next;
 	}
 	sasiedztwo = obecneMiasto->Sasiedztwo;
 	while (sasiedztwo != NULL) {
-		odleglosc = znajdzOdlegloscDoMiasta(sasiedztwo->miasto, odleglosciMiasta);
+		odleglosc2 = znajdzOdlegloscDoMiasta(sasiedztwo->miasto, odleglosciMiasta);
 		int droga = aktualnaOdleglosc + sasiedztwo->dlugoscDrogi;
-		if (!odleglosc->odwiedzone) {
-			dijkstra(sasiedztwo->miasto, odleglosciMiasta ,droga, aktualnaDroga);
+		if (!odleglosc2->odwiedzone) {
+			dijkstra(sasiedztwo->miasto, odleglosciMiasta ,droga, new UproszczonaListaMiast(aktualnaDroga));
 		}
 		sasiedztwo = sasiedztwo->next;
 	}
@@ -250,6 +265,15 @@ Odleglosc* Zarzadzanie::znajdzOdlegloscDoMiasta(ListaMiast* miasto, OdleglosciMi
 	for (int i = 0; i < iloscMiast; i++) {
 		if (odleglosciMiasta->odleglosci[i]->cel == miasto) {
 			return odleglosciMiasta->odleglosci[i];
+		}
+	}
+	return NULL;
+}
+
+UproszczonaListaMiast* Zarzadzanie::znajdzPosrednieMiasta(ListaMiast* miasto, OdleglosciMiasta* odleglosciMiasta) {
+	for (int i = 0; i < iloscMiast; i++) {
+		if (odleglosciMiasta->odleglosci[i]->cel == miasto) {
+			return odleglosciMiasta->odleglosci[i]->droga;
 		}
 	}
 	return NULL;
@@ -272,7 +296,7 @@ void Zarzadzanie::wcztajLoty()
 		cin >> miasto1;
 		cin >> miasto2;
 		cin >> czas;
-		this->dodajSasiedztwo(miasto1, miasto2, czas);
+		this->dodajSasiedztwoLot(miasto1, miasto2, czas);
 	}
 
 }
