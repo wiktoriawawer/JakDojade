@@ -4,19 +4,19 @@ class ListaSasiedztwa;
 class OdleglosciMiasta;
 class Odleglosc;
 class UproszczonaListaMiast;
-
+class Mapa;
 class Zarzadzanie {
 public:
 	int iloscMiast;
 	int iloscPoliczonychMiast=0;
 	ListaMiast* pierwszeMiasto;
 	OdleglosciMiasta** odleglosciMiast;
+	Mapa* mapa;
 	//dodaj nowe miasto;
 	void dodajMiasto(char* nazwa, int x, int y);
+	void dodajMiasto(int x, int y);
 	void usunMiasto();
-
 	void  usunSasiedztwo(ListaMiast* miasto1, ListaSasiedztwa* elementpoprzedni, ListaSasiedztwa* elementdousuniecia);
-
 	void dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc);
 	void dodajSasiedztwoLot(char* miasto1, char* miasto2, int odleglosc);
 	//void dodajSasiedztwo(char* miasto1,char* miasto2 , int odleglosc);

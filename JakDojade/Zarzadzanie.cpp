@@ -3,9 +3,11 @@
 #include "OdleglosciMiasta.h"
 #include "Odleglosc.h"
 #include "UproszczonaListaMiast.h"
+#include "Mapa.h"
 #include <iostream>
 
 using namespace std;
+
 
 bool compare(char* x, char* y) {
 	int i = 0;
@@ -34,6 +36,13 @@ void Zarzadzanie::dodajMiasto(char* nazwa, int x, int y)
 		obecneMaisto = obecneMaisto->next;
 	}
 	obecneMaisto->next = new ListaMiast(nazwa, x, y);
+}
+void Zarzadzanie::dodajMiasto( int x, int y)
+{
+	//szuaknie w tablicy nazwy miasta 
+	
+
+
 }
 
 void Zarzadzanie::usunMiasto()
@@ -64,13 +73,14 @@ void Zarzadzanie::dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc)
 	while (true) {
 		if (obecneMaisto1->Sasiedztwo->x == x1 && obecneMaisto1->Sasiedztwo->y == y1) 
 				break;
+		if (obecneMaisto1 == NULL) 
+			break;
 		obecneMaisto1 = obecneMaisto1->next;
-		if (obecneMaisto1 == NULL) break;
 
 	}
 	if (obecneMaisto1 == NULL) {
-		cout << x1 << "," << y1;
-		cout << "nie udalosie " << endl;
+		cout << x1 << " " << y1;
+		//this->dodajMiasto(x1, y1);
 		return;
 	}
 	ListaSasiedztwa* obecnesasiedztwo1 = obecneMaisto1->Sasiedztwo;
@@ -105,7 +115,7 @@ void Zarzadzanie::dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc)
 	}
 	if (obecneMaisto2 == NULL) {
 		cout << x2 << "," << y2;
-		cout << "nie udalosie " << endl;
+		//cout << "nie udalosie " << endl;
 		return;
 	}
 	ListaSasiedztwa* obecnesasiedztwo2 = obecneMaisto2->Sasiedztwo;
@@ -178,10 +188,10 @@ void Zarzadzanie::wypisz()
 {
 	ListaMiast* miasto = pierwszeMiasto;
 	while (miasto != NULL) {
-		cout << "|" << miasto->Sasiedztwo->nazwa << ",x=" << miasto->Sasiedztwo->x << ",y=" << miasto->Sasiedztwo->y << "|-";
+		cout << "|" << miasto->Sasiedztwo->nazwa << "|-";
 		ListaSasiedztwa* sasiedztwo = miasto->Sasiedztwo->next;
 		while (sasiedztwo != NULL) {
-			cout << sasiedztwo->nazwa << " " << sasiedztwo->dlugoscDrogi << ",x=" << sasiedztwo->x << ",y=" << sasiedztwo->y << "-";
+			cout <<" - "<< sasiedztwo->nazwa << " " << sasiedztwo->dlugoscDrogi ;
 			sasiedztwo = sasiedztwo->next;
 		}
 		miasto = miasto->next;

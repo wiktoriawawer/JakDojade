@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Droga.cpp" />
     <ClCompile Include="JakDojade.cpp" />
     <ClCompile Include="ListaSasiedztwa.cpp" />
     <ClCompile Include="Mapa.cpp" />
@@ -136,6 +137,7 @@
     <ClCompile Include="Zarzadzanie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Droga.h" />
     <ClInclude Include="ListaSasiedztwa.h" />
     <ClInclude Include="Mapa.h" />
     <ClInclude Include="Odleglosc.h" />

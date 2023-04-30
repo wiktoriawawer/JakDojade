@@ -1,6 +1,6 @@
 #include "Mapa.h"
 #include "Zarzadzanie.h"
-
+#include "Droga.h"
 bool isLetter(char x)
 {
     if (x <= 'Z' && x >= 'A')
@@ -101,8 +101,12 @@ void Mapa::SzukajDrog(Zarzadzanie* zarzadzanie)
             if (tablicamapy[i][j] == '*') {
                 tablicamapy[i][j] = '.';
                 //cout << j << " " << i;
+                //this->Szukaj(zarzadzanie, j, i, j, i, j, i, 0, 0);
                 this->SzukajDrogi(zarzadzanie, j, i, j, i, 0);
-                //this->Wypisz();                
+                cout << j << " " << i << endl;
+                this->Wypisz(); 
+                cout << endl;
+                cout << endl;
                 this->Przywroc();
 
             }
@@ -136,6 +140,7 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
         tab = ZnajdzWspoldzedne(x, y, '#');
         if (tab[0] == -1 || tab[1] == -1)
             return;
+        
         if (rozwidlenie) {
             tablicamapy[y][x] = '&';
         }
@@ -152,7 +157,7 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
         
         for (int i = 0; i < ileDrog; i++) {
             
-            tab = ZnajdzWspoldzedne(x, y, '#');
+            tab = ZnajdzWspoldzedne(x, y, '#', i);
             if (tab[0] == -1 || tab[1] == -1)
                 return;
             if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
@@ -162,6 +167,8 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
                 tablicamapy[y][x] = '.';
             }
             SzukajDrogi(zarzadznie, xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1, true);
+            //Przywroc();
+            //tablicamapy[tab[0]][tab[1]] = '&';
         }
         return;
         
@@ -181,14 +188,12 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
         return;
     }
     else if (ileMiast == 0 & ileDrog == 0) {
-        this->tablicamapy[y][x] = '.'; 
+        tablicamapy[y][x] = rozwidlenie ? '&' : '.';
         return;
     } 
     else if (ileMiast >0   && ileDrog > 0) { 
-        rozwidlenie = ileDrog > 1 || rozwidlenie ? true : false;
-        int* tab = ZnajdzWspoldzedne(x, y, '*');
-        if (tab[0] == -1 || tab[1] == -1)
-            return;
+        rozwidlenie = ileDrog + ileMiast > 1 || rozwidlenie ? true : false;
+        int* tab;
         
         for (int i = 0; i < ileMiast; i++) {
             tab = ZnajdzWspoldzedne(x, y, '*');
@@ -197,19 +202,20 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
             zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
         }
 
-        this->tablicamapy[y][x] = '.';
-        zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
+       //? this->tablicamapy[y][x] = '.';
+        
         for (int i = 0; i < ileDrog; i++) {
             tab = ZnajdzWspoldzedne(x, y, '#');
             if (tab[0] == -1 || tab[1] == -1)
-                return;
-            if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
+                return;               
+            else if (tablicamapy[y][x] == '#' || tablicamapy[y][x] == '&') {
                 tablicamapy[y][x] = rozwidlenie ? '&' : '.';
             }
             else {
                 tablicamapy[y][x] = '.';
             }
             SzukajDrogi(zarzadznie, xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1, rozwidlenie);
+            //Przywroc();
         }
 
 
@@ -217,9 +223,7 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
     else if (ileMiast >1 && ileDrog == 0) {
         int* tab;
         for (int i = 0; i < ileMiast ; i++) {
-            tab = ZnajdzWspoldzedne(x, y, '*');
-            if (tab[0] == -1 || tab[1] == -1)
-                return;
+            tab = ZnajdzWspoldzedne(x, y, '*', i);
             zarzadznie->dodajSasiedztwo(xmiasta1, ymiasta1, tab[0], tab[1], dlugosc + 1);
         }
     }
@@ -229,30 +233,50 @@ void Mapa::SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int 
 
     
 }
-int* Mapa::ZnajdzWspoldzedne(int x, int y,const char q) {
+int* Mapa::ZnajdzWspoldzedne(int x, int y,const char q, int i) {
     int tab[2] = { -1,-1 };
     if (x - 1 >= 0 && this->tablicamapy[y][x - 1] == q) {
         tab[0] = x - 1;
         tab[1] = y;
-        return tab;
+        if (i == 0) {
+            return tab;
+        }
+        else {
+            i--;
+        }
     }
     if (x + 1 < width && tablicamapy[y][x + 1] == q) {
         tab[0] = x + 1;
         tab[1] = y;
-        return tab;
+        if (i == 0) {
+            return tab;
+        }
+        else {
+            i--;
+        }
     }
 
     if (y - 1 >= 0 && tablicamapy[y-1][x] == q)
     {
         tab[0] = x ;
         tab[1] = y-1;
-        return tab;
+        if (i == 0) {
+            return tab;
+        }
+        else {
+            i--;
+        }
 
     }
     if (y + 1 < height && tablicamapy[y + 1][x] == q) {
         tab[0] = x;
         tab[1] = y + 1;
-        return tab;
+        if (i == 0) {
+            return tab;
+        }
+        else {
+            i--;
+        }
     }
     return tab;
 }
@@ -288,6 +312,40 @@ void Mapa::Wypisz()
         }
         cout << endl;
     }
+}
+
+void Mapa::Dodaj(int xm, int ym, int x, int y, int xprev, int yprev, int dlugosc, bool rozwidlenie)
+{
+    this->szukanie->Dodaj(xm,ym,x,y,xprev,yprev,dlugosc,rozwidlenie);
+}
+
+void Mapa::Usun()
+{
+}
+
+void Mapa::Szukaj(Zarzadzanie* zarzadznie, int xm, int ym, int x, int y, int xprev, int yprev, int dlugosc, bool rozwidlenie)
+{
+
+    int ileMiast = IleMiast(x, y);
+    int ileDrog = IleMiast(x, y);
+    int* tab;
+    
+    if (ileMiast == 0 && ileDrog == 0)
+        return;
+    else if (ileMiast == 1 && ileDrog == 0) {
+        tab = ZnajdzWspoldzedne(x, y, '*');
+        zarzadznie->dodajSasiedztwo(xm, ym, tab[0], tab[1], dlugosc + 1);
+    }
+    else if (ileMiast == 0 && ileDrog == 1) {
+        while (true) {
+            
+        }
+        
+    }
+
+    //---
+    
+
 }
 
 

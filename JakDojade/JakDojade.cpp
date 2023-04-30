@@ -23,16 +23,19 @@ int iledrog(char** maps, int width, int height, int x, int y) {
 int main()
 {
     Mapa* naszamapa=new Mapa();
+    naszamapa->szukanie = NULL;
     //wczyatnie wymiarow mapy 
     int width, height, k, questions;
     cin >> naszamapa->width;
     cin >> naszamapa->height;
     Zarzadzanie* mapa=new Zarzadzanie();
+    mapa->mapa = naszamapa;
     naszamapa->Wczytaj();
     naszamapa->DodajMiasta(mapa);
+    //cout << ".";
     //mapa->wypisz();
     naszamapa->SzukajDrog(mapa);
-    //mapa->wypisz();
+    mapa->wypisz();
     mapa->wcztajLoty();
     //mapa->wypisz();
     mapa->zapytania();
