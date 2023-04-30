@@ -90,6 +90,25 @@ void Mapa::DodajMiasta(Zarzadzanie* zarzadzanie)
             }
         }
     }
+    DodajSkrzyzowania(zarzadzanie);
+}
+
+void Mapa::DodajSkrzyzowania(Zarzadzanie* zarzadzanie)
+{
+    int i, j;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            if (tablicamapy[i][j] == '#') {
+                if (IleDrog(j, i) > 2) {
+                    tablicamapy[i][j] = '*';
+                    zarzadzanie->dodajMiasto(j, i);
+                }
+
+            }
+        }
+    }
+
+
 }
 
 void Mapa::SzukajDrog(Zarzadzanie* zarzadzanie)
@@ -103,10 +122,10 @@ void Mapa::SzukajDrog(Zarzadzanie* zarzadzanie)
                 //cout << j << " " << i;
                 //this->Szukaj(zarzadzanie, j, i, j, i, j, i, 0, 0);
                 this->SzukajDrogi(zarzadzanie, j, i, j, i, 0);
-                cout << j << " " << i << endl;
-                this->Wypisz(); 
-                cout << endl;
-                cout << endl;
+                //cout << j << " " << i << endl;
+                //this->Wypisz(); 
+                //cout << endl;
+                //cout << endl;
                 this->Przywroc();
 
             }

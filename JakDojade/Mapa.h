@@ -12,6 +12,7 @@ public :
 	SzukajDrogi* szukanie;
 	void Wczytaj();
 	void DodajMiasta(Zarzadzanie* zarzadzanie);
+	void DodajSkrzyzowania(Zarzadzanie* zarzadzanie);
 	void SzukajDrog(Zarzadzanie* zarzadzanie);
 	void Przywroc();
 	//void SzukajDrogi(Zarzadzanie* zarzadznie, int xmiasta1, int ymiasta1, int x, int y, int dlugosc);

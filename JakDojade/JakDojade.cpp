@@ -25,17 +25,17 @@ int main()
     Mapa* naszamapa=new Mapa();
     naszamapa->szukanie = NULL;
     //wczyatnie wymiarow mapy 
-    int width, height, k, questions;
     cin >> naszamapa->width;
     cin >> naszamapa->height;
     Zarzadzanie* mapa=new Zarzadzanie();
     mapa->mapa = naszamapa;
     naszamapa->Wczytaj();
     naszamapa->DodajMiasta(mapa);
-    //cout << ".";
-    //mapa->wypisz();
     naszamapa->SzukajDrog(mapa);
-    mapa->wypisz();
+    //naszamapa->Wypisz();
+    //mapa->wypisz();
+    //cout << endl;
+    //cout << mapa->iloscMiast << endl;
     mapa->wcztajLoty();
     //mapa->wypisz();
     mapa->zapytania();

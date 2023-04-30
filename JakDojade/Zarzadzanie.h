@@ -16,7 +16,7 @@ public:
 	void dodajMiasto(char* nazwa, int x, int y);
 	void dodajMiasto(int x, int y);
 	void usunMiasto();
-	void  usunSasiedztwo(ListaMiast* miasto1, ListaSasiedztwa* elementpoprzedni, ListaSasiedztwa* elementdousuniecia);
+	void usunSasiedztwo(ListaMiast* miasto1, ListaSasiedztwa* elementpoprzedni, ListaSasiedztwa* elementdousuniecia);
 	void dodajSasiedztwo(int x1, int y1, int x2, int y2, int odleglosc);
 	void dodajSasiedztwoLot(char* miasto1, char* miasto2, int odleglosc);
 	//void dodajSasiedztwo(char* miasto1,char* miasto2 , int odleglosc);

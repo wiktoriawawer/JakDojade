@@ -40,7 +40,9 @@ void Zarzadzanie::dodajMiasto(char* nazwa, int x, int y)
 void Zarzadzanie::dodajMiasto( int x, int y)
 {
 	//szuaknie w tablicy nazwy miasta 
-	
+	char* a = new char[1];
+	a[0] = '\0';
+	dodajMiasto(a, x, y);
 
 
 }
@@ -188,10 +190,10 @@ void Zarzadzanie::wypisz()
 {
 	ListaMiast* miasto = pierwszeMiasto;
 	while (miasto != NULL) {
-		cout << "|" << miasto->Sasiedztwo->nazwa << "|-";
+		cout << "|" << miasto->Sasiedztwo->nazwa<<","<<miasto->Sasiedztwo->x<<","<< miasto->Sasiedztwo->y << "|";
 		ListaSasiedztwa* sasiedztwo = miasto->Sasiedztwo->next;
 		while (sasiedztwo != NULL) {
-			cout <<" - "<< sasiedztwo->nazwa << " " << sasiedztwo->dlugoscDrogi ;
+			cout <<" - " << sasiedztwo->nazwa << " " << sasiedztwo->dlugoscDrogi<<"," << sasiedztwo->x<<"," << sasiedztwo->y << "," ;
 			sasiedztwo = sasiedztwo->next;
 		}
 		miasto = miasto->next;
@@ -229,7 +231,8 @@ void Zarzadzanie::dijkstraInit(char* nazwa1, char* nazwa2, bool posrednie)
 		while (miasta != NULL) {
 				if (compare(miasta->miasto->Sasiedztwo->nazwa,nazwa2))
 					break;
-				cout << miasta->miasto->Sasiedztwo->nazwa << ' ';
+				if (miasta->miasto->Sasiedztwo->nazwa[0]!='\0')
+					cout << miasta->miasto->Sasiedztwo->nazwa << ' ';
 				miasta = miasta->next;
 		
 			}
