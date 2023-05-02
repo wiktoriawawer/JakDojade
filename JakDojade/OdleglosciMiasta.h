@@ -10,5 +10,6 @@ public:
 
 public:
 	OdleglosciMiasta(ListaMiast* miasto, ListaMiast* pierwszeMiasto, int iloscMiast);
+	void Wypisz(ListaMiast* cel, bool posrednie);
 };
 

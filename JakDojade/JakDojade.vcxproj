@@ -127,21 +127,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dijkstra.cpp" />
     <ClCompile Include="Droga.cpp" />
+    <ClCompile Include="HashMap.cpp" />
     <ClCompile Include="JakDojade.cpp" />
     <ClCompile Include="ListaSasiedztwa.cpp" />
     <ClCompile Include="Mapa.cpp" />
     <ClCompile Include="Odleglosc.cpp" />
     <ClCompile Include="OdleglosciMiasta.cpp" />
+    <ClCompile Include="OdlegloscLlista.cpp" />
     <ClCompile Include="UproszczonaListaMiast.cpp" />
     <ClCompile Include="Zarzadzanie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dijkstra.h" />
     <ClInclude Include="Droga.h" />
+    <ClInclude Include="HashMap.h" />
     <ClInclude Include="ListaSasiedztwa.h" />
     <ClInclude Include="Mapa.h" />
     <ClInclude Include="Odleglosc.h" />
     <ClInclude Include="OdleglosciMiasta.h" />
+    <ClInclude Include="OdlegloscLlista.h" />
     <ClInclude Include="UproszczonaListaMiast.h" />
     <ClInclude Include="Zarzadzanie.h" />
   </ItemGroup>

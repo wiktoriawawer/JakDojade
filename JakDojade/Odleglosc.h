@@ -8,16 +8,21 @@ class Odleglosc
 {
 public:
 	ListaMiast* cel;
-	UproszczonaListaMiast* droga;
+	ListaMiast* previous;
 	int odleglosc;
 	bool odwiedzone = false;
 
 	Odleglosc(int iloscMiast, ListaMiast* cel, ListaMiast* pierwszeMiasto);
-	int aktualizujOdleglosc(int odleglosc, UproszczonaListaMiast* droga);
+	bool aktualizujOdleglosc(int odleglosc);
 
-	UproszczonaListaMiast* aktualizujDroge(int odleglosc, UproszczonaListaMiast* droga, ListaMiast* miasto = NULL);
+	bool aktualizujDroge(int odleglosc, ListaMiast* previous);
 
 	void odwiedz();
-	void Wypisz();
+};
+
+class StosDrogi {
+public:
+	char* nazwa;
+	StosDrogi* prev;
 };
 

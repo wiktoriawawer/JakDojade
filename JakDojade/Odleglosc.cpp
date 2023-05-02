@@ -6,43 +6,29 @@
 using namespace std;
 Odleglosc::Odleglosc(int iloscMiast, ListaMiast* cel, ListaMiast* pierwszeMiasto) {
 	this->cel = cel;
-	this->droga = (UproszczonaListaMiast*)malloc(iloscMiast * sizeof(UproszczonaListaMiast*));
 	this->odleglosc = 100000;
-	this->droga = new UproszczonaListaMiast();
-	
+	this->previous = NULL;
 }
 
-int Odleglosc::aktualizujOdleglosc(int odleglosc,UproszczonaListaMiast* droga)
+bool Odleglosc::aktualizujOdleglosc(int odleglosc)
 {
 	if (this->odleglosc > odleglosc) {
 		this->odleglosc = odleglosc;
-		//this->droga = droga;
+		return true;
 	}
-	return this->odleglosc;
+	return false;
 }
 
-UproszczonaListaMiast* Odleglosc::aktualizujDroge(int odleglosc, UproszczonaListaMiast* droga, ListaMiast* miasto)
+bool Odleglosc::aktualizujDroge(int odleglosc, ListaMiast* previous)
 {
+	//return this->aktualizujOdleglosc(odleglosc);
 	if (this->odleglosc > odleglosc) {
-		this->droga = new UproszczonaListaMiast(droga);
+		this->previous = previous;
 	}
-	if (miasto != NULL) {
-		this->droga->Dodaj(miasto);
-	}
-	return this->droga;
+	return this->aktualizujOdleglosc(odleglosc);
 }
 
 
 void Odleglosc::odwiedz() {
 	this->odwiedzone = true;
-}
-void Odleglosc::Wypisz() {
-	UproszczonaListaMiast* obecne = this->droga;
-	obecne = obecne->next;
-	while (obecne != NULL) {
-		cout<<obecne->miasto->Sasiedztwo->nazwa<<' ';
-		obecne = obecne->next;
-	}
-	cout << endl;
-
 }

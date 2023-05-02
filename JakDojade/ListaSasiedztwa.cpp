@@ -13,8 +13,9 @@ ListaSasiedztwa::ListaSasiedztwa(char* nazwa, int x, int y, ListaMiast* miasto)
 }
 
 
-ListaMiast::ListaMiast(char* nazwa, int x, int y)
+ListaMiast::ListaMiast(char* nazwa, int x, int y, int id)
 {
 	this->Sasiedztwo = new ListaSasiedztwa(nazwa,x,y, this);
 	this->next = NULL;
+	this->id = id;
 }

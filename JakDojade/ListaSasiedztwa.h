@@ -18,6 +18,8 @@ class ListaMiast {
 public: 
 	ListaSasiedztwa* Sasiedztwo;
 	ListaMiast* next;
+	bool puste;
+	int id;
 	//tworzenie nowego miasta
-	ListaMiast(char* nazwa, int x, int y);
+	ListaMiast(char* nazwa, int x, int y, int id);
 };
